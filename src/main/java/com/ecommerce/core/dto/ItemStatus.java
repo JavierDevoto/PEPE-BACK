@@ -1,4 +1,4 @@
-package core.dto;
+package com.ecommerce.core.dto;
 
 public enum ItemStatus {
     ACTIVE,

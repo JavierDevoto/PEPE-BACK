@@ -1,4 +1,4 @@
-package core.dto;
+package com.ecommerce.core.dto;
 
 import lombok.Getter;
 import lombok.Setter;
