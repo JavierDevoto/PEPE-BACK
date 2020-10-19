@@ -4,7 +4,6 @@ import com.ecommerce.core.dto.Item;
 import com.ecommerce.core.usecase.CreateItem;
 import com.ecommerce.core.usecase.RetrieveItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
