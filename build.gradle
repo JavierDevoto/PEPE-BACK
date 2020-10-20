@@ -14,12 +14,17 @@ repositories {
 }
 
 dependencies {
+    // Spring
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+
+    // Guava (Google Java Toolkit)
     implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
 
+    // Databases
+    runtimeOnly 'com.h2database:h2'
+
     //Testing
-    //testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
-    //testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
