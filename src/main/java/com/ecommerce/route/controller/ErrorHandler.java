@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import static java.util.Objects.nonNull;
+
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
@@ -22,7 +24,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { InvalidParametersException.class })
     protected ResponseEntity<Object> handleConflict(InvalidParametersException ex, WebRequest request) {
-        return respondWith(ex, request, ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return respondWith(ex, request, ex.getMessage(), HttpStatus.BAD_REQUEST, ex.getBusinessCause());
     }
 
     @ExceptionHandler(value = { UseCaseException.class })
@@ -30,15 +32,30 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         return respondWith(ex, request, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<Object> respondWith(UseCaseException ex, WebRequest request, String message, HttpStatus statusCode) {
+    @ExceptionHandler(value = { RuntimeException.class })
+    protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+        return respondWith(ex, request, ex.getClass().getName() + ": " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, nonNull(ex.getCause()) ? ex.getCause().getMessage() : null, ex.getStackTrace());
+    }
+
+    @ExceptionHandler(value = { Exception.class })
+    protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
+        return respondWith(ex, request, ex.getClass().getName() + ": " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, nonNull(ex.getCause()) ? ex.getCause().getMessage() : null, ex.getStackTrace());
+    }
+
+    private ResponseEntity<Object> respondWith(Exception ex, WebRequest request, String message, HttpStatus statusCode) {
         return respondWith(ex, request, message, statusCode, null);
     }
 
-    private ResponseEntity<Object> respondWith(UseCaseException ex, WebRequest request, String message, HttpStatus statusCode, Object cause) {
+    private ResponseEntity<Object> respondWith(Exception ex, WebRequest request, String message, HttpStatus statusCode, Object cause) {
+        return respondWith(ex, request, message, statusCode, cause, null);
+    }
+
+    private ResponseEntity<Object> respondWith(Exception ex, WebRequest request, String message, HttpStatus statusCode, Object cause, Object stacktrace) {
         ErrorResponse errorResponse = new ErrorResponse()
                 .setMessage(message)
                 .setCode(statusCode)
-                .setCause(cause);
+                .setCause(cause)
+                .setStacktrace(stacktrace);
 
         return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), statusCode, request);
     }

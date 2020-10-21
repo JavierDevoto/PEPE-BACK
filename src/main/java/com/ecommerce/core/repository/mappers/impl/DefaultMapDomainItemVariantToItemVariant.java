@@ -10,8 +10,11 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @Component
 public class DefaultMapDomainItemVariantToItemVariant implements MapDomainItemVariantToItemVariant {
@@ -34,6 +37,9 @@ public class DefaultMapDomainItemVariantToItemVariant implements MapDomainItemVa
     }
 
     private List<ItemAttribute> mapItemAttributes(List<DomainItemAttribute> attributes) {
+        if (isNull(attributes)) {
+            return new ArrayList<>();
+        }
         return attributes.stream()
                 .map(itemAttribute -> mapDomainItemAttributeToItemAttribute.get(itemAttribute))
                 .collect(Collectors.toList());

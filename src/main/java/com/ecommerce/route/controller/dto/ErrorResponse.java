@@ -12,4 +12,5 @@ public class ErrorResponse {
     private String message;
     private HttpStatus code;
     private Object cause;
+    private Object stacktrace;
 }
