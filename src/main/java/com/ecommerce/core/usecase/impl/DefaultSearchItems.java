@@ -15,6 +15,6 @@ public class DefaultSearchItems implements SearchItems {
 
     @Override
     public PagedResult<Item> get(Long limit, Long offset, String search, String tag, String sort) {
-        return searchItemsRepository.get(pageable);
+        return searchItemsRepository.get(limit, offset, search, tag, sort);
     }
 }

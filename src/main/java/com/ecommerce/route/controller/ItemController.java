@@ -33,9 +33,9 @@ public class ItemController {
     public PagedResult<Item> findItems(
             @RequestParam(defaultValue = "20") Long limit,
             @RequestParam(defaultValue = "0") Long offset,
-            @RequestParam String search,
-            @RequestParam String tag,
-            @RequestParam String sort
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) String sort
     ) {
         return searchItems.get(limit, offset, search, tag, sort);
     }
